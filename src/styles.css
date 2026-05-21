@@ -1,0 +1,137 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-display: "Playfair Display", serif;
+  --font-body: "DM Sans", sans-serif;
+
+  --color-navy: var(--navy);
+  --color-navy-soft: var(--navy-soft);
+  --color-ocean: var(--ocean);
+  --color-ocean-soft: var(--ocean-soft);
+  --color-sky: var(--sky);
+  --color-cream: var(--cream);
+  --color-muted-ink: var(--muted-ink);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--navy);
+  --color-muted: var(--sky);
+  --color-muted-foreground: var(--muted-ink);
+  --color-accent: var(--ocean-soft);
+  --color-accent-foreground: var(--navy);
+  --color-destructive: oklch(0.6 0.22 25);
+  --color-destructive-foreground: oklch(1 0 0);
+  --color-border: oklch(0.9 0.015 240);
+  --color-input: oklch(0.9 0.015 240);
+  --color-ring: var(--ocean);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+
+  --shadow-soft: 0 10px 40px -10px color-mix(in oklab, var(--navy) 25%, transparent);
+  --shadow-ocean: 0 20px 60px -20px color-mix(in oklab, var(--ocean) 40%, transparent);
+
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-blob: blob 18s ease-in-out infinite;
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+  @keyframes blob {
+    0%, 100% { border-radius: 60% 40% 50% 50% / 60% 50% 50% 40%; }
+    33% { border-radius: 40% 60% 70% 30% / 50% 60% 40% 50%; }
+    66% { border-radius: 50% 50% 40% 60% / 40% 50% 60% 50%; }
+  }
+}
+
+:root {
+  --radius: 1rem;
+
+  /* PearlArc brand - Ocean theme instead of Golden */
+  --navy: oklch(0.24 0.05 255);
+  --navy-soft: oklch(0.32 0.05 255);
+  --ocean: oklch(0.62 0.12 235);
+  --ocean-soft: oklch(0.85 0.06 235);
+  --sky: oklch(0.96 0.025 240);
+  --cream: oklch(0.99 0.005 240);
+  --muted-ink: oklch(0.55 0.02 255);
+
+  --background: var(--cream);
+  --foreground: var(--navy);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--navy);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--navy);
+  --primary: var(--navy);
+  --primary-foreground: var(--cream);
+  --secondary: var(--ocean);
+  --secondary-foreground: var(--navy);
+  --muted: var(--sky);
+  --muted-foreground: var(--muted-ink);
+  --accent: var(--ocean-soft);
+  --accent-foreground: var(--navy);
+  --destructive: oklch(0.6 0.22 25);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.9 0.015 240);
+  --input: oklch(0.9 0.015 240);
+  --ring: var(--ocean);
+}
+
+.dark {
+  --background: var(--navy);
+  --foreground: var(--cream);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    font-feature-settings: "ss01", "cv01";
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  .font-italic-serif { font-family: var(--font-display); font-style: italic; }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .marquee-track { display: flex; width: max-content; animation: marquee 30s linear infinite; }
+  .marquee-pause:hover .marquee-track { animation-play-state: paused; }
+  .gradient-hero {
+    background:
+      radial-gradient(60% 80% at 10% 10%, color-mix(in oklab, var(--ocean) 20%, transparent), transparent 60%),
+      radial-gradient(50% 70% at 90% 30%, color-mix(in oklab, var(--sky) 80%, transparent), transparent 60%),
+      linear-gradient(180deg, var(--cream), var(--cream));
+  }
+  .gradient-navy {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-soft) 60%, color-mix(in oklab, var(--ocean) 35%, var(--navy-soft)) 100%);
+  }
+  .glow-ocean { box-shadow: 0 30px 80px -30px color-mix(in oklab, var(--ocean) 70%, transparent); }
+}
