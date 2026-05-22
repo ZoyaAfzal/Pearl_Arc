@@ -180,7 +180,7 @@ function Navbar() {
           <MagneticButton
             variant="outline"
             href="#contact"
-            className="border-navy/20 text-navy hover:bg-navy hover:text-cream"
+            className="border-ocean bg-ocean text-navy hover:bg-sky hover:border-sky"
           >
             Book Appointment <ArrowUpRight className="h-4 w-4" />
           </MagneticButton>
@@ -456,28 +456,19 @@ function ServiceCard({
     name: string;
     desc: string;
   }) {
-    const [expanded, setExpanded] = useState(false);
     return (
       <div
-        className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-navy/5 bg-cream p-8 transition-all duration-500 hover:shadow-soft ${expanded ? 'h-auto' : 'min-h-[360px]'}`}
+        className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-navy/5 bg-cream p-6 transition-all duration-500 hover:shadow-soft min-h-[300px]"
       >
         <div>
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sky text-navy transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:bg-ocean/30">
-            <Icon className="h-7 w-7" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky text-navy transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:bg-ocean/30">
+            <Icon className="h-6 w-6" />
           </div>
-          <h3 className="mt-6 font-display text-2xl text-navy">{name}</h3>
-          <p className={`mt-2 text-sm leading-relaxed text-muted-ink ${expanded ? '' : 'line-clamp-4'}`}>
+          <h3 className="mt-5 font-display text-xl text-navy">{name}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted-ink">
             {desc}
           </p>
         </div>
-
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ocean hover:text-navy transition-colors"
-        >
-          {expanded ? "Show less" : "Learn more"}
-          {expanded ? <Plus className="h-4 w-4 rotate-45" /> : <ArrowUpRight className="h-4 w-4" />}
-        </button>
       </div>
     );
   }
@@ -560,62 +551,145 @@ const features = [
     tag: "Expert Team",
     title: "Experienced dental professionals",
     desc: "A roster of specialists with decades of combined practice, continuously trained.",
+    details: "Our team consists of world-class specialists who have trained at top-tier institutions. We prioritize continuous education to ensure we bring the latest techniques and care standards to our patients. From complex oral surgeries to gentle pediatric care, our experts are here to guide you through every step of your dental journey.",
   },
   {
     img: feature2,
     tag: "Technology",
     title: "Advanced technology used",
     desc: "Digital scanning, 3D imaging and same-day milling for precise, comfortable care.",
+    details: "We invest in the future of dentistry. Our clinic is equipped with the latest digital scanners, 3D cone-beam imaging, and CEREC same-day crown technology. This means no more messy impressions, faster diagnosis, and most treatments completed in a single visit. Precision and comfort are at the heart of everything we do.",
   },
   {
     img: feature3,
     tag: "Care",
     title: "Personalized patient care",
-    desc: "Every plan is built around your goals, schedule and comfort — never a template.",
+    desc: "Every plan is built around your goals, schedule and comfort, never a template.",
+    details: "Your smile is as unique as your fingerprint. That's why we don't believe in one-size-fits-all treatments. We take the time to listen to your concerns, understand your goals, and design a customized plan that fits your lifestyle. Whether you're looking for a complete smile makeover or routine maintenance, we provide care that is truly tailored to you.",
   },
 ];
 
 function WhyUsSection() {
-  return (
-    <section className="relative bg-sky/30 py-24 text-navy lg:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10">
-        <Reveal>
-          <div className="grid gap-10 lg:grid-cols-2 lg:items-end">
-            <div>
-              <SectionLabel>Why us</SectionLabel>
-              <h2 className="mt-5 font-display text-4xl leading-tight lg:text-5xl text-balance">
-                Reasons our patients choose us{" "}
-                <span className="font-italic-serif text-ocean">every time.</span>
-              </h2>
-            </div>
-            <p className="text-muted-ink">
-              "Walking in feels like a quiet hotel. Walking out, I just had the best dental visit of
-              my life." — a recent guest review, lightly edited for length.
-            </p>
-          </div>
-        </Reveal>
+  const [selected, setSelected] = useState<number | null>(null);
 
-        <div className="mt-16 grid gap-6 md:grid-cols-3">
-          {features.map((f, i) => (
-            <Reveal key={f.title} delay={i * 0.08}>
-              <div className="group relative flex flex-col h-full overflow-hidden rounded-3xl bg-cream shadow-soft">
-                <img
-                  src={f.img}
-                  alt={f.title}
-                  loading="lazy"
-                  className="h-64 w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="p-8 flex-1">
-                  <span className="inline-block rounded-full bg-ocean/20 px-3 py-1 text-xs uppercase tracking-widest text-ocean">
-                    {f.tag}
+  useEffect(() => {
+    const handleHashChange = () => setSelected(null);
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  return (
+    <section id="why-us" className="relative bg-sky/30 py-24 text-navy lg:py-32">
+      <div className="mx-auto max-w-7xl px-6 lg:px-10">
+        <AnimatePresence mode="wait">
+          {selected === null ? (
+            <motion.div
+              key="grid"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Reveal>
+                <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+                  <div>
+                    <SectionLabel>Why us</SectionLabel>
+                    <h2 className="mt-5 font-display text-4xl leading-tight lg:text-5xl text-balance">
+                      Reasons our patients choose us{" "}
+                      <span className="font-italic-serif text-ocean">every time.</span>
+                    </h2>
+                  </div>
+                  <div className="lg:border-l lg:border-navy/10 lg:pl-10">
+                    <p className="text-muted-ink leading-relaxed">
+                      "Walking in feels like a quiet hotel. Walking out, I just had the best dental visit of
+                      my life." - a recent guest review, lightly edited for length.
+                    </p>
+                  </div>
+                </div>
+              </Reveal>
+
+              <div className="mt-16 grid gap-6 md:grid-cols-3">
+                {features.map((f, i) => (
+                  <Reveal key={f.title} delay={i * 0.08}>
+                    <div className="group relative flex flex-col h-full overflow-hidden rounded-3xl bg-cream shadow-soft">
+                      <div className="overflow-hidden">
+                        <img
+                          src={f.img}
+                          alt={f.title}
+                          loading="lazy"
+                          className="h-64 w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      </div>
+                      <div className="flex flex-col flex-1 p-8">
+                        <div>
+                          <span className="inline-block rounded-full bg-ocean/20 px-3 py-1 text-xs uppercase tracking-widest text-ocean">
+                            {f.tag}
+                          </span>
+                          <h3 className="mt-4 font-display text-2xl text-navy line-clamp-2 min-h-[4rem]">
+                            {f.title}
+                          </h3>
+                          <p className="mt-2 text-sm text-muted-ink line-clamp-3">
+                            {f.desc}
+                          </p>
+                        </div>
+                        <div className="mt-auto pt-8">
+                          <button
+                            onClick={() => setSelected(i)}
+                            className="inline-flex items-center gap-2 text-sm font-medium text-ocean hover:text-navy transition-colors"
+                          >
+                            View details <ArrowRight className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </Reveal>
+                ))}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="detail"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="relative overflow-hidden rounded-[2.5rem] bg-cream p-8 lg:p-16 shadow-soft"
+            >
+              <button
+                onClick={() => setSelected(null)}
+                className="absolute right-8 top-8 rounded-full bg-navy/5 p-3 text-navy hover:bg-navy hover:text-cream transition-colors z-10"
+              >
+                <X className="h-6 w-6" />
+              </button>
+              
+              <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+                <div className="relative aspect-square overflow-hidden rounded-3xl">
+                  <img
+                    src={features[selected].img}
+                    alt={features[selected].title}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div>
+                  <span className="inline-block rounded-full bg-ocean/20 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-ocean">
+                    {features[selected].tag}
                   </span>
-                  <h3 className="mt-4 font-display text-2xl text-navy">{f.title}</h3>
-                  <p className="mt-2 text-sm text-muted-ink line-clamp-3">{f.desc}</p>
+                  <h2 className="mt-6 font-display text-4xl text-navy lg:text-5xl">
+                    {features[selected].title}
+                  </h2>
+                  <p className="mt-8 text-lg leading-relaxed text-muted-ink">
+                    {features[selected].details}
+                  </p>
+                  <div className="mt-12">
+                    <MagneticButton variant="primary" href="#contact">
+                      Book appointment <ArrowUpRight className="h-4 w-4" />
+                    </MagneticButton>
+                  </div>
                 </div>
               </div>
-            </Reveal>
-          ))}
-        </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
@@ -874,12 +948,12 @@ function PricingSection() {
 /* ---------------- faq ---------------- */
 
 const faqs = [
-  ["What should I expect during my first exam?", "We start with a calm chat about your goals and history, then perform a comprehensive exam: digital X-rays, intra-oral scan and an oral cancer screening. You leave with a clear plan and pricing — no surprises."],
+  ["What should I expect during my first exam?", "We start with a calm chat about your goals and history, then perform a comprehensive exam: digital X-rays, intra-oral scan and an oral cancer screening. You leave with a clear plan and pricing, no surprises."],
   ["How often should I visit the dentist?", "Most patients benefit from a hygiene visit every six months. We'll personalize that cadence based on your gum health, history and lifestyle."],
   ["What is teeth whitening and is it safe?", "Yes. Our in-clinic whitening uses medical-grade peroxide gels under controlled conditions. Most patients see 4–8 shades of improvement in a single session."],
   ["Do you accept dental insurance plans?", "We accept most major PPO plans and will file claims on your behalf. Bring your insurance card to your first visit and we'll handle the rest."],
   ["Can I pay for treatments in installments?", "Absolutely. We partner with CareCredit and offer in-house monthly plans so cost never gets in the way of the care you need."],
-  ["How long does a dental implant procedure take?", "From placement to final crown, most cases take 3–6 months — most of which is healing. Same-day temporary teeth keep you smiling throughout."],
+  ["How long does a dental implant procedure take?", "From placement to final crown, most cases take 3-6 months most of which is healing. Same-day temporary teeth keep you smiling throughout."],
 ];
 
 function FAQItem({ q, a, open, onClick }: { q: string; a: string; open: boolean; onClick: () => void }) {
@@ -946,52 +1020,138 @@ function FAQSection() {
 /* ---------------- blog ---------------- */
 
 const posts = [
-  { img: blog1, date: "July 7, 2024", category: "Hygiene", title: "The importance of daily flossing for whole-body health", excerpt: "Why those two minutes matter more than you think — and a simple routine that sticks." },
-  { img: blog2, date: "July 6, 2024", category: "Treatments", title: "When root canal therapy is actually necessary", excerpt: "Modern endodontics is faster and gentler than it used to be. Here's how to know it's time." },
-  { img: blog3, date: "July 6, 2024", category: "Family", title: "Dental care tips for young children that actually work", excerpt: "Small habits, big payoffs — a pediatric dentist's playbook for happy little smiles." },
+  {
+    img: blog1,
+    date: "July 7, 2024",
+    category: "Hygiene",
+    title: "The importance of daily flossing for whole-body health",
+    excerpt: "Why those two minutes matter more than you think and a simple routine that sticks.",
+    content: "Flossing is often the most neglected part of oral hygiene, yet it's one of the most critical. Plaque that builds up between teeth cannot be reached by a toothbrush alone. This buildup leads to gingivitis, which, if left untreated, can develop into periodontitis. Recent studies have also linked gum disease to broader systemic issues like heart disease and diabetes. A simple two-minute flossing routine every night can significantly lower your risk of these complications and keep your smile bright and healthy.",
+  },
+  {
+    img: blog2,
+    date: "July 6, 2024",
+    category: "Treatments",
+    title: "When root canal therapy is actually necessary",
+    excerpt: "Modern endodontics is faster and gentler than it used to be. Here's how to know it's time.",
+    content: "The term 'root canal' often strikes fear into patients, but modern endodontics is a virtually painless procedure designed to save your natural tooth. A root canal becomes necessary when the pulp inside your tooth becomes infected or inflamed due to deep decay, repeated dental procedures, or a crack. Symptoms include persistent pain, sensitivity to heat or cold, and swelling. By removing the infected pulp and sealing the tooth, we can eliminate pain and prevent the need for an extraction. It's a routine procedure that preserves your natural smile.",
+  },
+  {
+    img: blog3,
+    date: "July 6, 2024",
+    category: "Family",
+    title: "Dental care tips for young children that actually work",
+    excerpt: "Small habits, big payoffs, a pediatric dentist's playbook for happy little smiles.",
+    content: "Setting the foundation for a lifetime of healthy smiles starts early. The key to pediatric dentistry is making the experience positive and engaging. We recommend starting dental visits as soon as the first tooth appears. At home, turn brushing into a game or use a timer with a fun song. Avoid sugary snacks and drinks, especially before bed. By making oral hygiene a normal and fun part of the daily routine, you help your child avoid the 'dental anxiety' that many adults face and ensure their permanent teeth have a healthy start.",
+  },
 ];
 
 function BlogSection() {
+  const [selected, setSelected] = useState<number | null>(null);
+
+  useEffect(() => {
+    const handleHashChange = () => setSelected(null);
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
   return (
     <section id="blog" className="relative py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
-        <Reveal>
-          <h2 className="max-w-2xl font-display text-4xl leading-tight text-navy lg:text-5xl text-balance">
-            Explore our latest <span className="font-italic-serif text-ocean">articles.</span>
-          </h2>
-        </Reveal>
+        <AnimatePresence mode="wait">
+          {selected === null ? (
+            <motion.div
+              key="list"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Reveal>
+                <h2 className="max-w-2xl font-display text-4xl leading-tight text-navy lg:text-5xl text-balance">
+                  Explore our latest <span className="font-italic-serif text-ocean">articles.</span>
+                </h2>
+              </Reveal>
 
-        <div className="mt-14 grid gap-8 md:grid-cols-3">
-          {posts.map((p, i) => (
-            <Reveal key={p.title} delay={i * 0.08}>
-              <article className="group flex flex-col">
-                <div className="overflow-hidden rounded-3xl">
+              <div className="mt-14 grid gap-8 md:grid-cols-3">
+                {posts.map((p, i) => (
+                  <Reveal key={p.title} delay={i * 0.08}>
+                    <article className="group flex flex-col">
+                      <div className="overflow-hidden rounded-3xl">
+                        <img
+                          src={p.img}
+                          alt={p.title}
+                          loading="lazy"
+                          className="aspect-[16/11] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      </div>
+                      <div className="mt-6 flex items-center gap-3 text-xs">
+                        <span className="text-muted-ink">{p.date}</span>
+                        <span className="rounded-full bg-ocean/20 px-3 py-1 uppercase tracking-widest text-ocean">
+                          {p.category}
+                        </span>
+                      </div>
+                      <h3 className="mt-4 line-clamp-2 font-display text-2xl text-navy">{p.title}</h3>
+                      <p className="mt-2 line-clamp-2 text-sm text-muted-ink">{p.excerpt}</p>
+                      <button
+                        onClick={() => setSelected(i)}
+                        className="mt-5 inline-flex items-center gap-2 text-sm text-navy font-medium hover:text-ocean transition-colors"
+                      >
+                        View details
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </button>
+                    </article>
+                  </Reveal>
+                ))}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="detail"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="relative overflow-hidden rounded-[2.5rem] bg-cream p-8 lg:p-16 shadow-soft"
+            >
+              <button
+                onClick={() => setSelected(null)}
+                className="absolute right-8 top-8 rounded-full bg-navy/5 p-3 text-navy hover:bg-navy hover:text-cream transition-colors z-10"
+              >
+                <X className="h-6 w-6" />
+              </button>
+              
+              <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+                <div className="relative aspect-video overflow-hidden rounded-3xl">
                   <img
-                    src={p.img}
-                    alt={p.title}
-                    loading="lazy"
-                    className="aspect-[16/11] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    src={posts[selected].img}
+                    alt={posts[selected].title}
+                    className="h-full w-full object-cover"
                   />
                 </div>
-                <div className="mt-6 flex items-center gap-3 text-xs">
-                  <span className="text-muted-ink">{p.date}</span>
-                  <span className="rounded-full bg-ocean/20 px-3 py-1 uppercase tracking-widest text-ocean">
-                    {p.category}
-                  </span>
+                <div>
+                  <div className="flex items-center gap-3 text-xs">
+                    <span className="text-muted-ink">{posts[selected].date}</span>
+                    <span className="rounded-full bg-ocean/20 px-3 py-1 uppercase tracking-widest text-ocean">
+                      {posts[selected].category}
+                    </span>
+                  </div>
+                  <h2 className="mt-6 font-display text-4xl text-navy lg:text-5xl">
+                    {posts[selected].title}
+                  </h2>
+                  <p className="mt-8 text-lg leading-relaxed text-muted-ink">
+                    {posts[selected].content}
+                  </p>
+                  <div className="mt-12">
+                    <MagneticButton variant="primary" href="#contact">
+                      Contact author <ArrowRight className="h-4 w-4" />
+                    </MagneticButton>
+                  </div>
                 </div>
-                <h3 className="mt-4 line-clamp-2 font-display text-2xl text-navy">{p.title}</h3>
-                <p className="mt-2 line-clamp-2 text-sm text-muted-ink">{p.excerpt}</p>
-                <a
-                  href="#"
-                  className="mt-5 inline-flex items-center gap-2 text-sm text-navy"
-                >
-                  Read more
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </a>
-              </article>
-            </Reveal>
-          ))}
-        </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
@@ -1026,9 +1186,7 @@ function CTASection() {
               
               <div className="mt-12 space-y-6">
                 {[
-                  { label: "Call us", value: "+46 8 123 4567" },
                   { label: "Email", value: "hello@oceanarc.dental" },
-                  { label: "Visit", value: "12 Pearl Lane, Stockholm" },
                 ].map((item) => (
                   <div key={item.label}>
                     <div className="text-xs uppercase tracking-widest text-ocean font-medium">
@@ -1108,7 +1266,7 @@ function Footer() {
               <span className="font-display text-2xl">PearlArc</span>
             </a>
             <p className="mt-6 max-w-xs text-sm text-muted-ink">
-              A boutique dental studio where precision medicine meets quiet luxury — every smile,
+              A boutique dental studio where precision medicine meets quiet luxury every smile,
               considered.
             </p>
           </div>
@@ -1116,7 +1274,7 @@ function Footer() {
           {[
             ["Main", ["Home", "About", "Contact", "Blog"]],
             ["Services", ["Preventive", "Whitening", "Implants", "Orthodontics"]],
-            ["Visit us", ["12 Pearl Lane", "Stockholm, SE", "hello@oceanarc.dental", "+46 8 123 4567"]],
+            ["Visit us", ["hello@oceanarc.dental"]],
           ].map(([title, items]) => (
             <div key={title as string}>
               <h4 className="font-display text-lg text-ocean">{title}</h4>
@@ -1133,9 +1291,15 @@ function Footer() {
           ))}
         </div>
 
-        <div className="mt-16 flex flex-wrap items-center justify-between gap-4 border-t border-navy/10 pt-8 text-xs text-muted-ink">
-          <div>© {new Date().getFullYear()} PearlArc Dental. All rights reserved.</div>
-          <div>Crafted with care · Where every smile tells a story.</div>
+        <div className="mt-16 flex flex-wrap items-center justify-end gap-4 border-t border-navy/10 pt-8 text-xs text-muted-ink">
+          <a 
+            href="https://axistechgroup.com/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:text-ocean transition-colors"
+          >
+            Powered by AxisTechGroup
+          </a>
         </div>
       </div>
     </footer>
